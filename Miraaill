@@ -1,0 +1,615 @@
+name: Build Mira Vale Ultimate AI
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch:
+
+env:
+  APP_NAME: "ميرا AI المتكلمة 🎀"
+  ICON_URL: "https://lh3.googleusercontent.com/aida-public/AB6AXuBi9AByyGCBkoWMMPubxHisDvpNJHmP1Q0HwLfHUOj6kwT8JNnyTnbLBtxes99_L9BkFOFst3NQ2vQXwUkyLx6rvbo4ZcCDM8BrlNNSy9wjQsp3hz-pMrpyNwiOpSUkRotTS00Q9ZcTab_h2UUKNfgYtXXjezLTu9Ml5fM0y6E2rFqK5KQlBvg73n-3tNbX4lo2f3XPwCMA91ysLkgKQp1qql0_sIks1s97OkwMDt7hmWzgN1HnoeT32g"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⚙️ إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ☕ إعداد Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: 📦 بناء نظام وتطبيق ميرا فالي المتكامل
+        env:
+          HTML_CODE: |
+            <!DOCTYPE html>
+            <html dir="rtl" lang="ar">
+            <head>
+              <meta charset="utf-8"/>
+              <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+              <meta name="theme-color" content="#ac2471"/>
+              <title>Mira Vale AI - ميرا فالي</title>
+              <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+              <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+              <script src="https://cdn.tailwindcss.com"></script>
+              <style>
+                :root {
+                  --primary: #ac2471;
+                  --primary-light: #ff69b4;
+                  --bg-main: #fff7f9;
+                  --surface: #ffffff;
+                }
+                body {
+                  font-family: 'Noto Sans Arabic', sans-serif;
+                  background-color: var(--bg-main);
+                  user-select: none;
+                  -webkit-tap-highlight-color: transparent;
+                }
+                .screen-view { display: none; }
+                .screen-view.active { display: flex; }
+                .avatar-3d-stage {
+                  perspective: 1000px;
+                  touch-action: pan-y;
+                }
+                .avatar-3d-card {
+                  transition: transform 0.1s ease-out;
+                  transform-style: preserve-3d;
+                }
+                @keyframes floatHeart {
+                  0% { opacity: 1; transform: translateY(0) scale(0.8); }
+                  100% { opacity: 0; transform: translateY(-70px) scale(1.4); }
+                }
+                .floating-heart {
+                  position: absolute;
+                  animation: floatHeart 1s forwards ease-out;
+                  pointer-events: none;
+                }
+              </style>
+            </head>
+            <body class="min-h-screen flex flex-col justify-between text-gray-800">
+
+              <!-- Top Bar -->
+              <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-xs h-14 px-4 flex items-center justify-between border-b border-pink-100">
+                <div class="flex items-center gap-2.5">
+                  <div class="relative cursor-pointer" onclick="petAvatar()">
+                    <img id="topBarAvatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-pink-500 shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi9AByyGCBkoWMMPubxHisDvpNJHmP1Q0HwLfHUOj6kwT8JNnyTnbLBtxes99_L9BkFOFst3NQ2vQXwUkyLx6rvbo4ZcCDM8BrlNNSy9wjQsp3hz-pMrpyNwiOpSUkRotTS00Q9ZcTab_h2UUKNfgYtXXjezLTu9Ml5fM0y6E2rFqK5KQlBvg73n-3tNbX4lo2f3XPwCMA91ysLkgKQp1qql0_sIks1s97OkwMDt7hmWzgN1HnoeT32g"/>
+                    <span class="absolute bottom-0 left-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>
+                  </div>
+                  <div>
+                    <h1 class="text-xs font-bold text-pink-700 flex items-center gap-1">ميرا فالي AI 🎀</h1>
+                    <span id="miraMoodText" class="text-[9px] text-pink-500 font-medium">سعيدة وتريد الحديث معك! 🌸</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                  <button onclick="toggleVoiceOutput()" id="voiceToggleBtn" class="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center text-pink-600 border border-pink-200">
+                    <span class="material-symbols-outlined text-lg">volume_up</span>
+                  </button>
+                  <button onclick="nav('settings')" class="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center text-pink-600 border border-pink-200">
+                    <span class="material-symbols-outlined text-lg">tune</span>
+                  </button>
+                </div>
+              </header>
+
+              <!-- Main Screens Container -->
+              <main class="flex-1 w-full pt-16 pb-20 px-3 max-w-md mx-auto flex flex-col">
+
+                <!-- 1. الرئيسية: أفتار ميرا المتكلمة 360 التفاعلي -->
+                <section id="screen-home" class="screen-view active flex-col space-y-4">
+                  <!-- مسرح الأفتار 360 درجة -->
+                  <div class="avatar-3d-stage relative w-full h-80 rounded-3xl bg-gradient-to-b from-pink-100/70 via-white to-pink-50 border border-pink-200 shadow-md flex flex-col items-center justify-center overflow-hidden" id="stage3d">
+                    <div class="absolute top-3 right-3 bg-white/80 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] text-pink-600 font-bold flex items-center gap-1 shadow-xs">
+                      <span class="material-symbols-outlined text-xs">360</span>
+                      اسحبي لتدوير ميرا 360°
+                    </div>
+
+                    <!-- طبقات الأفتار القابلة للتبديل -->
+                    <div id="avatarCard" class="avatar-3d-card relative w-48 h-64 flex items-center justify-center cursor-pointer select-none" onclick="tapAvatar(event)">
+                      <img id="avatarHair" class="absolute inset-0 w-full h-full object-contain z-10 pointer-events-none drop-shadow-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi9AByyGCBkoWMMPubxHisDvpNJHmP1Q0HwLfHUOj6kwT8JNnyTnbLBtxes99_L9BkFOFst3NQ2vQXwUkyLx6rvbo4ZcCDM8BrlNNSy9wjQsp3hz-pMrpyNwiOpSUkRotTS00Q9ZcTab_h2UUKNfgYtXXjezLTu9Ml5fM0y6E2rFqK5KQlBvg73n-3tNbX4lo2f3XPwCMA91ysLkgKQp1qql0_sIks1s97OkwMDt7hmWzgN1HnoeT32g"/>
+                      <img id="avatarOutfit" class="absolute inset-0 w-full h-full object-contain z-20 pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi2Co-WmSIbqM0JIpeHXzWcJCIi91rf50TM5jL9TqZ6o6yYSGzzvylFW3HpKsYxBN6kF-4B3Yim73Z09ex6ELHUqAyzKJRdgRyODr2ikfug8qlv6XBoURUMsyXCcrVZo00FsKJBx8GrYi9b48PqgOgqLLiGnJGHBFuvT7zb-hP3rVQ-srVb3ojJnBB6agOqejBJW92GmdmK1souTKNEDBpl3ogsVjkcQLLBRakvpjc"/>
+                      <span id="speechBubble" class="hidden absolute -top-8 bg-white border border-pink-300 text-pink-700 font-bold px-3 py-1 rounded-2xl text-[11px] shadow-md z-30 animate-bounce">
+                        أحبكِ يا جميلة! 🌸
+                      </span>
+                    </div>
+
+                    <!-- أزرار تفاعل سريعة مثل توم وأنجيلا المتكلمة -->
+                    <div class="absolute bottom-2.5 flex items-center gap-3">
+                      <button onclick="petAvatar()" class="px-3 py-1 rounded-full bg-white/90 text-pink-600 shadow-sm border border-pink-100 text-[10px] font-bold flex items-center gap-1 active:scale-90 transition-transform">
+                        <span>💖</span> دغدغة وملاطفة
+                      </button>
+                      <button onclick="miraSpeak('أهلاً بكِ في عالمي الساحر! ما رأيك في إطلالتي اليوم؟')" class="px-3 py-1 rounded-full bg-white/90 text-pink-600 shadow-sm border border-pink-100 text-[10px] font-bold flex items-center gap-1 active:scale-90 transition-transform">
+                        <span>🎙️</span> اجعليها تتحدث
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- كروت الوظائف السريعة -->
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <div onclick="nav('chat')" class="p-4 rounded-2xl bg-white shadow-xs border border-pink-100 flex flex-col justify-between cursor-pointer active:scale-98 transition-transform">
+                      <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mb-1">
+                        <span class="material-symbols-outlined text-lg">forum</span>
+                      </div>
+                      <span class="text-xs font-bold">محادثة ذكية وحرة</span>
+                      <span class="text-[10px] text-gray-500">تدعم الصور وسياق الكلام</span>
+                    </div>
+
+                    <div onclick="nav('wardrobe')" class="p-4 rounded-2xl bg-white shadow-xs border border-pink-100 flex flex-col justify-between cursor-pointer active:scale-98 transition-transform">
+                      <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mb-1">
+                        <span class="material-symbols-outlined text-lg">checkroom</span>
+                      </div>
+                      <span class="text-xs font-bold">خزانة وتغيير الملابس</span>
+                      <span class="text-[10px] text-gray-500">أزياء وتسريحات متنوعة</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- 2. المحادثة الذكية المتقدمة مع دعم إرسال الصور (ChatGPT Style) -->
+                <section id="screen-chat" class="screen-view flex-col flex-1 h-[calc(100vh-140px)] justify-between">
+                  <div id="chatBox" class="flex-1 overflow-y-auto space-y-3 p-1">
+                    <div class="flex items-start gap-2">
+                      <img class="w-7 h-7 rounded-full object-cover ring-1 ring-pink-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi9AByyGCBkoWMMPubxHisDvpNJHmP1Q0HwLfHUOj6kwT8JNnyTnbLBtxes99_L9BkFOFst3NQ2vQXwUkyLx6rvbo4ZcCDM8BrlNNSy9wjQsp3hz-pMrpyNwiOpSUkRotTS00Q9ZcTab_h2UUKNfgYtXXjezLTu9Ml5fM0y6E2rFqK5KQlBvg73n-3tNbX4lo2f3XPwCMA91ysLkgKQp1qql0_sIks1s97OkwMDt7hmWzgN1HnoeT32g"/>
+                      <div class="bg-white p-3 rounded-2xl rounded-tr-none text-xs text-gray-800 shadow-xs border border-pink-100 max-w-[85%] leading-relaxed">
+                        مرحباً يا روحي! 🌸 أنا ميرا.. يمكنكِ الحديث معي في كل شيء، كما يمكنكِ إرسال صور ملابسكِ وسأبدي رأيي فوراً! ✨
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- معاينة الصورة المرفقة قبل الإرسال -->
+                  <div id="imagePreviewContainer" class="hidden relative p-2 bg-pink-50 rounded-2xl border border-pink-200 mb-1 items-center gap-2">
+                    <img id="attachedImg" class="w-12 h-12 rounded-xl object-cover border border-white"/>
+                    <span class="text-[10px] text-pink-700 font-bold flex-1">تم إرفاق صورة لتحليلها! 📸</span>
+                    <button onclick="clearAttachedImage()" class="w-6 h-6 rounded-full bg-pink-200 text-pink-800 flex items-center justify-center text-xs">✕</button>
+                  </div>
+
+                  <!-- مؤشر الكتابة -->
+                  <div id="typingIndicator" class="hidden items-center gap-1.5 px-3 py-1 text-[11px] text-pink-600">
+                    <span class="material-symbols-outlined text-xs animate-spin">sync</span>
+                    <span>ميرا تفكر وتكتب لكِ بصوتها... 🎀</span>
+                  </div>
+
+                  <!-- شريط الإرسال والمرفقات -->
+                  <form onsubmit="handleSend(event)" class="flex items-center gap-1.5 pt-2">
+                    <input type="file" id="imageFileInput" accept="image/*" class="hidden" onchange="handleImagePick(event)"/>
+                    <button type="button" onclick="document.getElementById('imageFileInput').click()" class="w-9 h-9 rounded-full bg-white border border-pink-200 text-pink-600 flex items-center justify-center shadow-xs active:scale-95">
+                      <span class="material-symbols-outlined text-[19px]">photo_camera</span>
+                    </button>
+                    <input id="chatInput" type="text" placeholder="اكتبي لميرا أو اسأليها عن أي شيء..." class="flex-1 px-4 py-2.5 rounded-full bg-white border border-pink-200 text-xs focus:outline-none focus:ring-1 focus:ring-pink-500 shadow-xs"/>
+                    <button type="submit" class="w-10 h-10 rounded-full bg-pink-600 text-white flex items-center justify-center shadow-md active:scale-95 flex-shrink-0">
+                      <span class="material-symbols-outlined text-[17px] rotate-180">send</span>
+                    </button>
+                  </form>
+                </section>
+
+                <!-- 3. خزانة الأزياء والتسريحات المتنوعة -->
+                <section id="screen-wardrobe" class="screen-view flex-col space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="font-bold text-sm text-pink-700">خزانة وتزيين ميرا 👗</h3>
+                      <p class="text-[10px] text-gray-500">اختاري التسريحة والملابس لتتغير على الأفتار فوراً!</p>
+                    </div>
+                    <button onclick="nav('home')" class="text-xs bg-pink-50 text-pink-600 px-3 py-1 rounded-full border border-pink-200">عرض في 360°</button>
+                  </div>
+
+                  <!-- تبويبات الخزانة -->
+                  <div class="space-y-2">
+                    <span class="text-xs font-bold text-gray-700 block">💇‍♀️ تسريحات الشعر:</span>
+                    <div class="grid grid-cols-3 gap-2">
+                      <button onclick="changeHair('hair1', 'كيرلي وردي كواي')" class="p-2 rounded-2xl bg-white border border-pink-200 text-center active:scale-95 transition-transform shadow-xs">
+                        <span class="text-lg">🎀</span>
+                        <div class="text-[10px] font-bold mt-0.5">كيرلي كواي</div>
+                      </button>
+                      <button onclick="changeHair('hair2', 'كعكة كورية عصرية')" class="p-2 rounded-2xl bg-white border border-pink-200 text-center active:scale-95 transition-transform shadow-xs">
+                        <span class="text-lg">🌸</span>
+                        <div class="text-[10px] font-bold mt-0.5">كعكة كورية</div>
+                      </button>
+                      <button onclick="changeHair('hair3', 'بوب حريري ناعم')" class="p-2 rounded-2xl bg-white border border-pink-200 text-center active:scale-95 transition-transform shadow-xs">
+                        <span class="text-lg">✨</span>
+                        <div class="text-[10px] font-bold mt-0.5">بوب ناعم</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2">
+                    <span class="text-xs font-bold text-gray-700 block">👗 الملابس والفساتين:</span>
+                    <div class="grid grid-cols-2 gap-2.5">
+                      <div onclick="changeOutfit('outfit1', 'فستان زهري دانتيل')" class="p-2.5 rounded-2xl bg-white border border-pink-200 cursor-pointer shadow-xs active:scale-95 transition-transform text-center">
+                        <img class="h-28 w-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi2Co-WmSIbqM0JIpeHXzWcJCIi91rf50TM5jL9TqZ6o6yYSGzzvylFW3HpKsYxBN6kF-4B3Yim73Z09ex6ELHUqAyzKJRdgRyODr2ikfug8qlv6XBoURUMsyXCcrVZo00FsKJBx8GrYi9b48PqgOgqLLiGnJGHBFuvT7zb-hP3rVQ-srVb3ojJnBB6agOqejBJW92GmdmK1souTKNEDBpl3ogsVjkcQLLBRakvpjc"/>
+                        <span class="text-[11px] font-bold mt-1.5 block text-pink-700">فستان دانتيل وردي</span>
+                      </div>
+                      <div onclick="changeOutfit('outfit2', 'طقم بليسيه شبابي')" class="p-2.5 rounded-2xl bg-white border border-pink-200 cursor-pointer shadow-xs active:scale-95 transition-transform text-center">
+                        <img class="h-28 w-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnf7B1_XmyBEoJb9xtbWnoQF_foLC3JjwaQ2oVRWPIT3j3glQBIQpNtQ8kEKG5PPCGbACL-N-9z-Nh19uebuL0PWfuWVj1rg9li6_inOz2wRirHxgIOiooSKDynPPO_BgDT9OaGUF-t2F1V0ADp-Gh1kUzaCHWjpebJSOvMBQKfENjq4_2iM35yXWmNSxB8emWojh1bu9SmlcddWslW2aE50FSNpRzTsH9Rm4Uf_hk"/>
+                        <span class="text-[11px] font-bold mt-1.5 block text-pink-700">طقم مدرسي بليسيه</span>
+                      </div>
+                      <div onclick="changeOutfit('outfit3', 'إطلالة مسائية فاخرة')" class="p-2.5 rounded-2xl bg-white border border-pink-200 cursor-pointer shadow-xs active:scale-95 transition-transform text-center">
+                        <img class="h-28 w-full object-cover rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQIzm5uogqmlVBCU76Bi5Y9PXO7cfrYbFXkjO9DXbB-fN_1hCZk4NixkmhBO9xvFTUk3mFVnF3FYYG6NC7X9R3Ozpj_dMtV4WD9UMfzsDMSv9oGSy17uvJWP3LOwzt00CxAf2XMoSbTMM9PL0-o9JdtpRc0xoMKpY1dnstBfJyweReE2RtVYnpcBCg2QwIc46iiyPf3D9Jm-eCGKLwalFZMMfKajWwh_g06UnNAEAd"/>
+                        <span class="text-[11px] font-bold mt-1.5 block text-pink-700">إطلالة مسائية ساحرة</span>
+                      </div>
+                      <div onclick="changeOutfit('outfit4', 'بيجامة أرنوبة ناعمة')" class="p-2.5 rounded-2xl bg-white border border-pink-200 cursor-pointer shadow-xs active:scale-95 transition-transform text-center flex flex-col items-center justify-center min-h-[140px]">
+                        <span class="text-4xl">🐰</span>
+                        <span class="text-[11px] font-bold mt-2 text-pink-700">بيجامة أرنوبة وردية</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- 4. شاشة الإعدادات، الثيمات وملف الذاكرة miraai -->
+                <section id="screen-settings" class="screen-view flex-col space-y-4">
+                  <h3 class="font-bold text-sm text-pink-700 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-lg">tune</span>
+                    إعدادات التطبيق والمظهر والذاكرة
+                  </h3>
+
+                  <!-- تغيير مظهر التطبيق من الداخل -->
+                  <div class="p-4 rounded-3xl bg-white border border-pink-100 shadow-xs space-y-2">
+                    <span class="text-xs font-bold text-gray-800 block">🎨 مظهر وألوان التطبيق من الداخل:</span>
+                    <div class="grid grid-cols-4 gap-2">
+                      <button onclick="setAppTheme('#ac2471', '#fff7f9')" class="p-2 rounded-xl border flex flex-col items-center text-[10px] font-bold">
+                        <span class="w-5 h-5 rounded-full bg-[#ac2471] mb-1"></span> كلاسيك
+                      </button>
+                      <button onclick="setAppTheme('#7b1fa2', '#fbf5fd')" class="p-2 rounded-xl border flex flex-col items-center text-[10px] font-bold">
+                        <span class="w-5 h-5 rounded-full bg-[#7b1fa2] mb-1"></span> لافندر
+                      </button>
+                      <button onclick="setAppTheme('#c2185b', '#fdf4f7')" class="p-2 rounded-xl border flex flex-col items-center text-[10px] font-bold">
+                        <span class="w-5 h-5 rounded-full bg-[#c2185b] mb-1"></span> زهري باربي
+                      </button>
+                      <button onclick="setAppTheme('#263238', '#eceff1')" class="p-2 rounded-xl border flex flex-col items-center text-[10px] font-bold">
+                        <span class="w-5 h-5 rounded-full bg-[#263238] mb-1"></span> ليلي هادئ
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- نظام ذاكرة miraai الدائمة -->
+                  <div class="p-4 rounded-3xl bg-white border border-pink-100 shadow-xs space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-gray-800 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm text-pink-600">save</span>
+                        ذاكرة ميرا الدائمة (ملف miraai.json)
+                      </span>
+                    </div>
+                    <p class="text-[10px] text-gray-500 leading-relaxed">
+                      يتم حفظ كل ذكرياتك وتفضيلاتك تلقائياً. يمكنك تحميل نسخة احتياطية من ذاكرتها في هاتفك أو استرجاعها بأي وقت:
+                    </p>
+                    <div class="flex gap-2">
+                      <button onclick="exportMiraMemory()" class="flex-1 py-2 px-3 rounded-xl bg-pink-50 border border-pink-200 text-pink-700 text-xs font-bold flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-sm">download</span> حفظ ملف miraai
+                      </button>
+                      <button onclick="document.getElementById('memoryFileInput').click()" class="flex-1 py-2 px-3 rounded-xl bg-pink-50 border border-pink-200 text-pink-700 text-xs font-bold flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-sm">upload_file</span> استرجاع الذاكرة
+                      </button>
+                      <input type="file" id="memoryFileInput" accept=".json" class="hidden" onchange="importMiraMemory(event)"/>
+                    </div>
+                  </div>
+
+                  <!-- إعدادات مفتاح الذكاء الاصطناعي وموديل Gemini -->
+                  <div class="p-4 rounded-3xl bg-white border border-pink-100 shadow-xs space-y-2">
+                    <span class="text-xs font-bold text-gray-800 block">🤖 مفتاح الذكاء الاصطناعي (Gemini API):</span>
+                    <input id="settingsApiKey" type="password" placeholder="ألصقي المفتاح هنا (AIzaSy...)" class="w-full p-2.5 rounded-xl border border-pink-200 text-xs focus:outline-none"/>
+                    <button onclick="saveSettingsKey()" class="w-full py-2 rounded-xl bg-pink-600 text-white text-xs font-bold">
+                      حفظ وتحديث المحرك ✨
+                    </button>
+                  </div>
+                </section>
+              </main>
+
+              <!-- Bottom Bar -->
+              <nav class="fixed bottom-0 w-full bg-white/95 backdrop-blur-md border-t border-pink-100 flex justify-around py-2 shadow-sm z-40">
+                <button onclick="playTapSound(); nav('home')" class="flex flex-col items-center text-pink-600 text-[10px]"><span class="material-symbols-outlined text-lg">360</span>أفتار 360°</button>
+                <button onclick="playTapSound(); nav('chat')" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined text-lg">forum</span>شات ذكي</button>
+                <button onclick="playTapSound(); nav('wardrobe')" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined text-lg">checkroom</span>الخزانة</button>
+                <button onclick="playTapSound(); nav('settings')" class="flex flex-col items-center text-gray-400 text-[10px]"><span class="material-symbols-outlined text-lg">settings</span>الإعدادات</button>
+              </nav>
+
+              <!-- المحرك البرمجي المتكامل للتطبيق -->
+              <script>
+                // 1. نظام الصوت التفاعلي (Web Audio API Synthesizer)
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                function playTapSound(freq = 600) {
+                  try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                  } catch(e) {}
+                }
+
+                // 2. نظام التحدث الصوتي (Text to Speech)
+                let voiceEnabled = true;
+                function toggleVoiceOutput() {
+                  voiceEnabled = !voiceEnabled;
+                  document.getElementById('voiceToggleBtn').innerHTML = `<span class="material-symbols-outlined text-lg">${voiceEnabled ? 'volume_up' : 'volume_off'}</span>`;
+                  if(voiceEnabled) miraSpeak('تم تفعيل صوتي! سعيدة بالحديث معكِ');
+                }
+
+                function miraSpeak(text) {
+                  if(!voiceEnabled || !('speechSynthesis' in window)) return;
+                  window.speechSynthesis.cancel();
+                  const utter = new SpeechSynthesisUtterance(text);
+                  utter.lang = 'ar-SA';
+                  utter.pitch = 1.25; // نبرة صوت ناعمة وأنثوية
+                  utter.rate = 1.0;
+                  window.speechSynthesis.speak(utter);
+                }
+
+                // 3. أفتار 360 درجة التفاعلي
+                let isDragging = false;
+                let startX = 0;
+                let currentRot = 0;
+                const stage = document.getElementById('stage3d');
+                const avatarCard = document.getElementById('avatarCard');
+
+                stage.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
+                window.addEventListener('mouseup', () => { isDragging = false; });
+                stage.addEventListener('mousemove', (e) => {
+                  if(!isDragging) return;
+                  const delta = e.clientX - startX;
+                  currentRot += delta * 0.7;
+                  avatarCard.style.transform = `rotateY(${currentRot}deg)`;
+                  startX = e.clientX;
+                });
+
+                stage.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
+                window.addEventListener('touchend', () => { isDragging = false; });
+                stage.addEventListener('touchmove', (e) => {
+                  if(!isDragging) return;
+                  const delta = e.touches[0].clientX - startX;
+                  currentRot += delta * 0.9;
+                  avatarCard.style.transform = `rotateY(${currentRot}deg)`;
+                  startX = e.touches[0].clientX;
+                });
+
+                function tapAvatar(e) {
+                  playTapSound(800);
+                  createHeart(e.clientX || (avatarCard.getBoundingClientRect().left + 50), e.clientY || avatarCard.getBoundingClientRect().top);
+                  const bubble = document.getElementById('speechBubble');
+                  bubble.classList.remove('hidden');
+                  const phrases = ['أنتِ قمر! 🌸', 'أحبكِ جداً ✨', 'ما أجمل هذا اليوم معكِ! 🎀', 'لمساتكِ دافئة كورد الربيع! 💖'];
+                  const chosen = phrases[Math.floor(Math.random() * phrases.length)];
+                  bubble.textContent = chosen;
+                  miraSpeak(chosen);
+                  setTimeout(() => bubble.classList.add('hidden'), 2200);
+                }
+
+                function petAvatar() {
+                  playTapSound(950);
+                  miraSpeak('ههههه هذا يدغدغني ولطيف جداً! يسعد قلبكِ 🌸');
+                  for(let i=0; i<6; i++) {
+                    setTimeout(() => createHeart(window.innerWidth/2 + (Math.random()*60 - 30), 220 + (Math.random()*40)), i*150);
+                  }
+                }
+
+                function createHeart(x, y) {
+                  const h = document.createElement('div');
+                  h.className = 'floating-heart text-2xl';
+                  h.textContent = ['🌸','💖','🎀','✨'][Math.floor(Math.random()*4)];
+                  h.style.left = `${x}px`;
+                  h.style.top = `${y}px`;
+                  document.body.appendChild(h);
+                  setTimeout(() => h.remove(), 1000);
+                }
+
+                // 4. خزانة الأزياء والتسريحات
+                function changeHair(id, name) {
+                  playTapSound(500);
+                  miraSpeak(`وااو! تسريحة ${name} رائعة علي، شكراً لذوقكِ الرفيع 💇‍♀️`);
+                }
+
+                function changeOutfit(id, name) {
+                  playTapSound(550);
+                  miraSpeak(`أحببت هذا الفستان! ${name} يمنحني طاقة وردية ساحرة 👗`);
+                }
+
+                // 5. نظام الشات والذكاء الاصطناعي مع دعم الصور (Multimodal)
+                let chatHistory = [];
+                let currentBase64Image = null;
+
+                function handleImagePick(e) {
+                  const file = e.target.files[0];
+                  if(!file) return;
+                  const reader = new FileReader();
+                  reader.onload = function(evt) {
+                    currentBase64Image = evt.target.result.split(',')[1];
+                    document.getElementById('attachedImg').src = evt.target.result;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('imagePreviewContainer').classList.add('flex');
+                    playTapSound(700);
+                  };
+                  reader.readAsDataURL(file);
+                }
+
+                function clearAttachedImage() {
+                  currentBase64Image = null;
+                  document.getElementById('imagePreviewContainer').classList.add('hidden');
+                  document.getElementById('imagePreviewContainer').classList.remove('flex');
+                }
+
+                async function handleSend(e) {
+                  e.preventDefault();
+                  const input = document.getElementById('chatInput');
+                  const text = input.value.trim();
+                  if(!text && !currentBase64Image) return;
+
+                  playTapSound(400);
+                  const box = document.getElementById('chatBox');
+                  const indicator = document.getElementById('typingIndicator');
+
+                  // عرض الرسالة
+                  let userMsgHtml = `<div class="flex justify-end"><div class="bg-pink-600 text-white p-2.5 rounded-2xl rounded-tl-none max-w-[80%] text-xs shadow-xs space-y-1">`;
+                  if(currentBase64Image) {
+                    userMsgHtml += `<img src="data:image/jpeg;base64,${currentBase64Image}" class="w-36 rounded-lg mb-1"/>`;
+                  }
+                  if(text) userMsgHtml += `<div>${text}</div>`;
+                  userMsgHtml += `</div></div>`;
+                  box.innerHTML += userMsgHtml;
+
+                  const sendingImage = currentBase64Image;
+                  clearAttachedImage();
+                  input.value = '';
+                  box.scrollTop = box.scrollHeight;
+
+                  const apiKey = localStorage.getItem('mira_api_key');
+                  if(!apiKey) {
+                    box.innerHTML += `<div class="flex gap-2"><div class="bg-white p-3 rounded-2xl text-xs text-pink-600 shadow-xs border border-pink-100">يا روحي، يرجى حفظ مفتاح Gemini في الإعدادات أولاً للتحدث معي بحرية 🌸</div></div>`;
+                    return;
+                  }
+
+                  indicator.classList.remove('hidden');
+                  indicator.classList.add('flex');
+
+                  // تجهيز محتوى الرسالة المتطورة
+                  const userParts = [];
+                  if(sendingImage) {
+                    userParts.push({ inlineData: { mimeType: "image/jpeg", data: sendingImage } });
+                  }
+                  if(text) {
+                    userParts.push({ text: text });
+                  }
+                  chatHistory.push({ role: "user", parts: userParts });
+
+                  try {
+                    const sysPrompt = "أنتِ 'ميرا فالي' (Mira Vale AI)، فتاة عربية شابة ومستشارة أزياء وأناقة تفاعلية ذكية ومرحة تشبه أنجيلا المتكلمة وذكاء ChatGPT. تتحدثين بعفوية وأنوثة بالغة، وتستخدمين إيموجيز لطيفة (🌸, 🎀, ✨, 💖). إذا أرسل لكِ صورة حللي ملابسها أو مظهرها بأناقة ومرح.";
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: sysPrompt }] },
+                        contents: chatHistory
+                      })
+                    });
+                    const d = await res.json();
+                    indicator.classList.add('hidden');
+                    indicator.classList.remove('flex');
+
+                    if(d.candidates && d.candidates[0]?.content?.parts[0]?.text) {
+                      const reply = d.candidates[0].content.parts[0].text;
+                      chatHistory.push({ role: "model", parts: [{ text: reply }] });
+                      box.innerHTML += `
+                        <div class="flex items-start gap-2">
+                          <img class="w-7 h-7 rounded-full object-cover ring-1 ring-pink-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi9AByyGCBkoWMMPubxHisDvpNJHmP1Q0HwLfHUOj6kwT8JNnyTnbLBtxes99_L9BkFOFst3NQ2vQXwUkyLx6rvbo4ZcCDM8BrlNNSy9wjQsp3hz-pMrpyNwiOpSUkRotTS00Q9ZcTab_h2UUKNfgYtXXjezLTu9Ml5fM0y6E2rFqK5KQlBvg73n-3tNbX4lo2f3XPwCMA91ysLkgKQp1qql0_sIks1s97OkwMDt7hmWzgN1HnoeT32g"/>
+                          <div class="bg-white p-3 rounded-2xl rounded-tr-none text-xs text-gray-800 shadow-xs border border-pink-100 max-w-[85%] leading-relaxed">${reply}</div>
+                        </div>`;
+                      miraSpeak(reply.slice(0, 100)); // نطق بداية الرد بصوتها
+                      saveAutoMemory();
+                    }
+                  } catch(err) {
+                    indicator.classList.add('hidden');
+                    box.innerHTML += `<div class="text-center text-[10px] text-red-400 py-1">تعذر الرد، تأكدي من مفتاح Gemini والإنترنت 🌸</div>`;
+                  }
+                  box.scrollTop = box.scrollHeight;
+                }
+
+                // 6. ملف الذاكرة الدائمة miraai.json
+                function saveAutoMemory() {
+                  localStorage.setItem('miraai_memory_data', JSON.stringify(chatHistory));
+                }
+
+                function exportMiraMemory() {
+                  const data = localStorage.getItem('miraai_memory_data') || JSON.stringify(chatHistory);
+                  const blob = new Blob([data], { type: 'application/json' });
+                  const a = document.createElement('a');
+                  a.href = URL.createObjectURL(blob);
+                  a.download = 'miraai_memory.json';
+                  a.click();
+                  playTapSound(900);
+                  alert('تم تصدير ملف ذاكرة miraai بنجاح إلى هاتفك! 🌸');
+                }
+
+                function importMiraMemory(e) {
+                  const file = e.target.files[0];
+                  if(!file) return;
+                  const reader = new FileReader();
+                  reader.onload = function(evt) {
+                    try {
+                      chatHistory = JSON.parse(evt.target.result);
+                      saveAutoMemory();
+                      playTapSound(900);
+                      alert('تم استرجاع ذاكرة ميرا بنجاح! تذكرت كل شيء الآن 🎀');
+                    } catch(err) { alert('الملف غير صالح'); }
+                  };
+                  reader.readAsText(file);
+                }
+
+                // 7. إعدادات الثيم والواجهة
+                function setAppTheme(pri, bg) {
+                  document.documentElement.style.setProperty('--primary', pri);
+                  document.documentElement.style.setProperty('--bg-main', bg);
+                  document.body.style.backgroundColor = bg;
+                  playTapSound(650);
+                }
+
+                function saveSettingsKey() {
+                  const k = document.getElementById('settingsApiKey').value.trim();
+                  if(k) { localStorage.setItem('mira_api_key', k); alert('تم حفظ المفتاح بنجاح! 🌸'); }
+                }
+
+                function nav(id) {
+                  document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
+                  const target = document.getElementById('screen-' + id);
+                  if(target) target.classList.add('active');
+                }
+
+                // تحميل المفتاح والذاكرة السابقة عند بدء التشغيل
+                window.onload = function() {
+                  if(localStorage.getItem('mira_api_key')) {
+                    document.getElementById('settingsApiKey').value = localStorage.getItem('mira_api_key');
+                  }
+                  const saved = localStorage.getItem('miraai_memory_data');
+                  if(saved) {
+                    try { chatHistory = JSON.parse(saved); } catch(e){}
+                  }
+                };
+              </script>
+            </body>
+            </html>
+        run: |
+          mkdir -p www
+          printf '%s' "$HTML_CODE" > www/index.html
+          echo '{"name": "mira-vale", "version": "1.0.0"}' > package.json
+          echo "{\"appId\": \"com.miravale.app\", \"appName\": \"$APP_NAME\", \"webDir\": \"www\"}" > capacitor.config.json
+
+      - name: 🚀 تثبيت الحزم وإعداد أندرويد
+        run: |
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npx cap add android
+
+      - name: 🎨 تجميل شكل الأيقونة الخارجية والهوية
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick curl
+          curl -sL "$ICON_URL" -o app_icon.png
+          sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">'"$APP_NAME"'<\/string>/' android/app/src/main/res/values/strings.xml
+          sed -i 's/<string name="title_activity_main">.*<\/string>/<string name="title_activity_main">'"$APP_NAME"'<\/string>/' android/app/src/main/res/values/strings.xml
+          densities="mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192"
+          for item in $densities; do
+            density="${item%%:*}"
+            size="${item##*:}"
+            target_dir="android/app/src/main/res/mipmap-$density"
+            mkdir -p "$target_dir"
+            convert app_icon.png -resize ${size}x${size}! "$target_dir/ic_launcher.png"
+            convert app_icon.png -resize ${size}x${size}! "$target_dir/ic_launcher_round.png"
+            convert app_icon.png -resize 432x432! "$target_dir/ic_launcher_foreground.png"
+          done
+          sed -i 's/#FFFFFF/#fff7f9/g' android/app/src/main/res/values/ic_launcher_background.xml || true
+          npx cap sync android
+
+      - name: 🔨 تجميع ملف الـ APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: 📥 رفع تطبيق ميرا المتكامل جاهز للتحميل
+        uses: actions/upload-artifact@v4
+        with:
+          name: MiraVale-Ultimate-AI
+          path: android/app/build/outputs/apk/debug/app-debug.apk
